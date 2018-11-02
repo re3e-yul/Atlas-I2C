@@ -1,4 +1,7 @@
 # Atlas-I2C
+# original driver : Atlas Scientific 
+# rewrite / addons : Eric Soulliage (eric.soulliage@gmail.com)
+
 #Usage: Atlas-I2C [verb] [address] (in any order)
 #		verbs as in i2c Commands listed in Atlas Scientific documentation
 
