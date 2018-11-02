@@ -79,22 +79,26 @@ def main():
 	        except ValueError:
         	        verb = y
 
-
-	device = atlas_i2c()     # creates the I2C port object, specify the address or bus if necessary
-	if (len(sys.argv) == 1):
-		print ''
-		print 'Usage: Atlas-I2C [verb] [address] (in any order)'
-		print 'verbs as in i2c Commands listed in Atlas Scientific documentation'
-		print 'address as reported by i2cdetect -y [1/0] '
-		print "atlas-I2C [address] will invoke 'i', information on the device at address "
-		print ''
-		print 'Device(s) detected: '
-		print ''
-	        devices = device.list_i2c_devices()
-                for i in range(len (devices)):
-        	        print devices[i]
-			
-		exit()
+	try:
+		device = atlas_i2c()     # creates the I2C port object, specify the address or bus if necessary
+		if (len(sys.argv) == 1):
+			print ''
+			print 'Usage: Atlas-I2C [verb] [address] (in any order)'
+			print 'verbs as in i2c Commands listed in Atlas Scientific documentation'
+			print 'address as reported by i2cdetect -y [1/0] '
+			print "atlas-I2C [address] will invoke 'i', information on the device at address "
+			print  ""
+			print 'Device(s) detected: '
+			print ""
+		        devices = device.list_i2c_devices()
+        	        for i in range(len (devices)):
+        		        print devices[i]
+	except IOError:
+			print ""
+			print "No I2C port detected"
+			print ""
+			print ""
+			exit()
 
 	device.set_i2c_address(int(addr))
 	if (len(sys.argv) == 2):
