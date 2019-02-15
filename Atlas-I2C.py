@@ -113,7 +113,66 @@ def main():
 				device.set_i2c_address(int(addr))
 				verb = 'i'
 				try:
+					
                                 	print "Address: ",addr, "\tInfo: ", (device.query(verb))[3:]
+					Type = device.query('i')[3:5]
+					if (Type == 'pH'):
+						print "supported verbs: "
+						print ""
+						print "Baud\t\t: switch to UART : Baud,300 [300/1200/2400/9600/19200/38400/57600/115200]"
+						print "Cal\t\t: perform Calibration : Cal,mid,7.00 Cal,low,4.00 Cal,high,10 Cal,Clear"
+						print "Export/Import\t: Export/Import Calibration"
+						print "Factory\t\t: Enable Factory reset"
+						print "Find\t\t: blink led "
+                                                print "i\t\t: device information : returns [device], [firmware version]"
+						print "i2c\t\t: change i2c address : i2c,100" 
+                                                print "L\t\t: enable/disable LED "
+                                                print "Plock\t\t: enable/disable Protocol lock"
+                                                print "R\t\t: return a single reading"
+						print "Sleep\t\t: enter sleep mode"
+						print "Slope\t\t: return the slope : Slope,?"
+                                                print "Status\t\t: return status information"
+                                                print "T\t\t: temperature compensation : T,? T,20.0"
+					if (Type == 'EC'):
+						print "supported verbs: "
+                                                print ""
+                                                print "Baud\t\t: switch to UART : Baud,300 [300/1200/2400/9600/19200/38400/57600/115200]"
+                                                print "Cal\t\t: perform Calibration : Cal,mid,7.00 Cal,low,4.00 Cal,high,10 Cal,Clear"
+                                                print "Export/Import\t: Export/Import Calibration"
+                                                print "Factory\t\t: Enable Factory reset"
+                                                print "Find\t\t: blink led "
+                                                print "i\t\t: device information : returns [device], [firmware version]"
+                                                print "i2c\t\t: change i2c address : i2c,100"
+						print "K\t\t: set probe type : K,? K,0.1 K,1.0 K,10 K,n (n = any value; floating point in ASCII)"
+						print "L\t\t: enable/disable LED "
+						print "O\t\t: enable disale parameters : O,[EC,TDS,S,SG],[0,1]"
+						print "Plock\t\t: enable/disable Protocol lock"
+                                                print "R\t\t: return a single reading"
+                                                print "Sleep\t\t: enter sleep mode"
+                                                print "Status\t\t: return status information"
+                                                print "T\t\t: temperature compensation : T,? T,20.0"
+					if (Type == 'PM'):
+						print "supported verbs: "
+                                                print ""
+                                                print "Baud\t\t: switch to UART : Baud,300 [300/1200/2400/9600/19200/38400/57600/115200]"
+                                                print "Cal\t\t: perform Calibration : "
+						print "D\t\t: dispense modes : D,n (n=+/-mL * for continuous) D,?"
+						print "\t\t\t\t   D,n,T (n=+/-mL T=Min)"
+						print "Factory\t\t: Enable Factory reset"
+                                                print "Find\t\t: blink led "
+                                                print "i\t\t: device information : returns [device], [firmware version]"
+                                                print "i2c\t\t: change i2c address : i2c,100"
+						print "L\t\t: enable/disable LED "
+                                                print "O\t\t: enable disale parameters : O,[EC,TDS,S,SG],[0,1]"
+						print "P\t\t: pauses the pump during dispensing"
+						print "Plock\t\t: enable/disable Protocol lock"
+						print "Pv\t\t: check pump voltage"
+                                                print "R\t\t: return a single reading"
+                                                print "Sleep\t\t: enter sleep mode"
+                                                print "Status\t\t: return status information"
+						print "TV,?\t\t: shows total volume dispensed"
+						print "ATV,?\t\t: absolute value of the total volume dispensed "
+						print "clear\t\t: clears the total dispensed volume"
                                 except IOError:
                                         print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
 				print ""
@@ -126,10 +185,7 @@ def main():
         		print ""
 			try:
 				Type = device.query('i')[3:5]
-				if (Type == 'pH'):
-					print (device.query(verb))
-				else:
-					print(device.query(verb)) 
+				print(device.query(verb)) 
 			except IOError:
         			print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
 			print ""
