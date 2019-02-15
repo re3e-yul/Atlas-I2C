@@ -155,7 +155,7 @@ def main():
 						print "supported verbs: "
                                                 print ""
                                                 print "Baud\t\t: switch to UART : Baud,300 [300/1200/2400/9600/19200/38400/57600/115200]"
-                                                print "Cal\t\t: perform Calibration : "
+                                                print "Cal\t\t: perform Calibration : Cal,v v = corrected volume"
 						print "D\t\t: dispense modes : D,n (n=+/-mL * for continuous) D,?"
 						print "\t\t\t\t   D,n,T (n=+/-mL T=Min)"
 						print "Factory\t\t: Enable Factory reset"
