@@ -3,13 +3,16 @@ import io # used to create file streams
 import fcntl # used to access I2C parameters like addresses
 import time # used for sleep delay and timestamps
 import sys # used for system calls 
+import os
+import subprocess
+import re
 
 class atlas_i2c():
 	
-    	long_timeout = 1.5 # the timeout needed to query readings and calibrations
-    	short_timeout = .5 # timeout for regular commands
+    	long_timeout = 2.0 # the timeout needed to query readings and calibrations
+    	short_timeout = 1.0 # timeout for regular commands
     	default_bus = 1 # the default bus for I2C on the newer Raspberry Pis, certain older boards use bus 0
-    	default_address = 103 # the default address for the pH sensor
+    	default_address = 99 # the default address for the pH sensor
         current_addr = default_address
     	def __init__(self, address=default_address, bus=default_bus):
        		# open two file streams, one for reading and one for writing
@@ -81,37 +84,66 @@ def main():
 
 	try:
 		device = atlas_i2c()     # creates the I2C port object, specify the address or bus if necessary
-		if (len(sys.argv) == 1):
+		if (len(sys.argv) < 3 ):
 			print ''
 			print 'Usage: Atlas-I2C [verb] [address] (in any order)'
 			print 'verbs as in i2c Commands listed in Atlas Scientific documentation'
 			print 'address as reported by i2cdetect -y [1/0] '
 			print "atlas-I2C [address] will invoke 'i', information on the device at address "
 			print  ""
-			print 'Device(s) detected: '
+			if (len(sys.argv) == 1):
+				print 'Device(s) detected: '
+				print ""
+				p = subprocess.Popen(['i2cdetect', '-y','1'],stdout=subprocess.PIPE,)
+				for i in range(0,9):
+  					line = str(p.stdout.readline())
+  					line = line[3:]
+					for match in re.finditer("[0-9][0-9]", line):
+						Addr = int(match.group(), 16)
+						device.set_i2c_address(Addr)
+        	      				verb = 'i'
+       						try:
+               						print "Address: ",Addr, "\tInfo: ", (device.query(verb))[3:]
+						except IOError:
+			        	        	print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
+				print ""
+                        	print ""
+				exit()
+			else:
+				device.set_i2c_address(int(addr))
+				verb = 'i'
+				try:
+                                	print "Address: ",addr, "\tInfo: ", (device.query(verb))[3:]
+                                except IOError:
+                                        print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
+				print ""
+                        	print ""
+				exit()
+			
+		elif (len(sys.argv) == 3):
+			device.set_i2c_address(int(addr))
 			print ""
-		        devices = device.list_i2c_devices()
-        	        for i in range(len (devices)):
-        		        print devices[i]
-	except IOError:
+        		print ""
+			try:
+				Type = device.query('i')[3:5]
+				if (Type == 'pH'):
+					print (device.query(verb))
+				else:
+					print(device.query(verb)) 
+			except IOError:
+        			print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
 			print ""
-			print "No I2C port detected"
-			print ""
-			print ""
+        		print ""
 			exit()
 
-	device.set_i2c_address(int(addr))
-	if (len(sys.argv) == 2):
-#		y=sys.argv[1]
-		try:	
-                        float(sys.argv[1])
-			verb = 'i'
-		except:
-			pass
-	try:
-		print(device.query(verb))
 	except IOError:
-        	print("Query failed \n - Address may be invalid, use List_addr command to see available addresses")
+                        print ""
+                        print "No I2C port detected"
+                        print ""
+                        print ""
+                        exit()
+
+
 
 
 if __name__ == '__main__':
